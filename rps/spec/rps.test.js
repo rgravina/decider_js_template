@@ -1,4 +1,4 @@
-import Requests, {Result, Throws} from '../src/decider'
+import Requests, {Throws} from '../src/decider'
 
 describe("rps", () => {
     describe("p1 wins", () => {
