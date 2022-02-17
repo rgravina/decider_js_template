@@ -3,9 +3,7 @@ import React from 'react'
 export default class Decider extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            result: ""
-        }
+        this.state = {}
     }
 
     submit() {
