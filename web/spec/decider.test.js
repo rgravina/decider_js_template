@@ -2,6 +2,7 @@ import {render} from 'react-dom'
 import React from 'react'
 import Decider from '../src/decider'
 import ReactTestUtils from 'react-dom/test-utils'
+import { Result, Round, Throws } from '../../rps/src/decider'
 
 let container
 
@@ -15,7 +16,7 @@ const teardown = () => {
 }
 
 const renderApp = (props) => {
-    render(<Decider requests={props} />, container)
+    render(<Decider requests={props} roundRepo={{}}/>, container)
 }
 
 const getContent = () => {
@@ -23,7 +24,11 @@ const getContent = () => {
 }
 
 const submit = () => {
-    document.querySelector("button").click()
+    document.querySelector("button[name='play']").click()
+}
+
+const getHistory = () => {
+    document.querySelector("button[name='history']").click()
 }
 
 const enterTextIntoInput = (name, value) => {
@@ -53,6 +58,18 @@ const alwaysP1WinsStub = {
 const alwaysP2WinsStub = {
     play(p1, p2, observer) {
         observer.p2Wins()
+    }
+}
+
+const noRoundsStub = {
+    getHistory(observer, roundRepo) {
+        observer.noRounds()
+    }
+}
+
+const roundsStub = {
+    getHistory(observer, roundRepo) {
+        observer.rounds([new Round(Throws.rock, Throws.paper, Result.p2Wins)])
     }
 }
 
@@ -141,7 +158,51 @@ describe("play game", () => {
             submit()
 
             // verify that the game module recieved inputs
-            expect(requestSpy.play).toHaveBeenCalledWith("rock", "scissors", expect.anything())
+            expect(requestSpy.play).toHaveBeenCalledWith("rock", "scissors", expect.anything(), expect.anything())
+        })
+    })
+})
+
+describe("history", () => {
+    beforeEach(() => {
+        setupDOM()
+    })
+
+    afterEach(() => {
+        teardown()
+    })
+
+    describe("no rounds", () => {
+        it("on render does not display no rounds message", () => {
+            renderApp(noRoundsStub)
+    
+            expect(getContent()).not.toContain("no rounds")
+        })
+
+        it("displays no rounds message", () => {
+            renderApp(noRoundsStub)
+    
+            getHistory()
+    
+            expect(getContent()).toContain("no rounds")
+        })
+    })
+
+    describe("rounds", () => {
+        it("on render does not display rounds", () => {
+            renderApp(roundsStub)
+    
+            expect(getContent()).not.toContain("no rounds")
+        })
+
+        it("displays rounds", () => {
+            renderApp(roundsStub)
+    
+            getHistory()
+    
+            expect(getContent()).toContain("rock")
+            expect(getContent()).toContain("paper")
+            expect(getContent()).toContain("p2Wins")
         })
     })
 })
