@@ -10,8 +10,12 @@ export default class Requests {
         new PlayRroundRequest(observer, p1, p2).play()
     }
 
-    getHistory = (observer) => {
-        observer.noRounds()
+    getHistory = (observer, roundRepo) => {
+        if (roundRepo.isEmpty()) {
+            observer.noRounds()
+        } else {
+            observer.rounds()
+        }
     }
 }
 

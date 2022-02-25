@@ -1,11 +1,37 @@
-import Requests from '../src/decider'
+import Requests, {Throws} from '../src/decider'
 
 describe("history", () => {
-    it("when no rounds have played calls UI no rounds method", () => {
-        const observer = {noRounds: jest.fn()}
+    describe("no rounds", () => {
+        it("when no rounds have played calls UI no rounds method", () => {
+            const observer = {noRounds: jest.fn()}
 
-        new Requests().getHistory(observer)
+            const roundRepo = {
+                isEmpty: () => true
+            }
 
-        expect(observer.noRounds).toHaveBeenCalled()
+            new Requests().getHistory(observer, roundRepo)
+    
+            expect(observer.noRounds).toHaveBeenCalled()
+        })
+    })
+
+    describe("with rounds", () => {
+        it("when rounds have been played calls UI rounds method with rounds", () => {
+            const observer = {
+                invalidInput: () => {},
+                rounds: jest.fn()
+            }
+    
+            const roundRepo = {
+                isEmpty: () => false
+            }
+    
+            let requests = new Requests()
+    
+            requests.play(Throws.rock, "sailboat", observer, roundRepo)
+            requests.getHistory(observer, roundRepo)
+    
+            expect(observer.rounds).toHaveBeenCalled()
+        })
     })
 })
