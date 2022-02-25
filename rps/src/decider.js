@@ -4,6 +4,13 @@ export const Throws = {
     paper: "paper"
 }
 
+export const Result = {
+    invalid: "invalid",
+    p1Wins: "p1Wins",
+    p2Wins: "p2Wins",
+    tie: "tie"
+}
+
 export class Round {
     constructor(p1, p2, result) {
         this.p1 = p1
@@ -14,8 +21,8 @@ export class Round {
 
 const ThrowPattern = [Throws.rock, Throws.scissors, Throws.paper]
 export default class Requests {
-    play = (p1, p2, observer) => {
-        new PlayRroundRequest(observer, p1, p2).play()
+    play = (p1, p2, observer, roundRepo) => {
+        new PlayRroundRequest(observer, p1, p2, roundRepo).play()
     }
 
     getHistory = (observer, roundRepo) => {
@@ -28,23 +35,28 @@ export default class Requests {
 }
 
 class PlayRroundRequest {
-    constructor(observer, p1, p2) {
+    constructor(observer, p1, p2, roundRepo) {
        this.p1 = p1
        this.p2 = p2
        this.observer = observer
+       this.roundRepo = roundRepo
     }
 
     play = () => {
         if (this.invalidInput()) {
+            this.roundRepo.save(new Round(this.p1, this.p2, Result.invalid))
             this.observer.invalidInput()
             return
         }
         
         if (this.tie()) {
+            this.roundRepo.save(new Round(this.p1, this.p2, Result.tie))
             this.observer.tie()
         } else if (this.p1Wins()) {
+            this.roundRepo.save(new Round(this.p1, this.p2, Result.p1Wins))
             this.observer.p1Wins()
         } else {
+            this.roundRepo.save(new Round(this.p1, this.p2, Result.p2Wins))
             this.observer.p2Wins()
         }
     }
