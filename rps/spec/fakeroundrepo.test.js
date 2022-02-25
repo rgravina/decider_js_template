@@ -6,7 +6,7 @@ describe("fake round repo", () => {
         it("when no rounds have played", () => {
             const repo = new FakeRoundRepo()
 
-            expect(repo.isEmpty()).toBeTrue()
+            expect(repo.isEmpty()).toEqual(true)
         })
 
         it("when rounds have played", () => {
@@ -14,7 +14,7 @@ describe("fake round repo", () => {
 
             repo.save(new Round(Throws.rock, "sailboat", "invalid"))
 
-            expect(repo.isEmpty()).toBeFalse()
+            expect(repo.isEmpty()).toEqual(false)
         })
     })
 
