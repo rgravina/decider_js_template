@@ -22,7 +22,6 @@ describe("history", () => {
                 rounds: jest.fn()
             }
             
-            // spy, stub, mock, fake, dummy
             let rounds = [
                 new Round(Throws.rock, "sailboat", "invalid")
             ]
@@ -41,3 +40,4 @@ describe("history", () => {
         })
     })
 })
+
