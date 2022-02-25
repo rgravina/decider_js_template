@@ -1,4 +1,4 @@
-import Requests, {Throws} from '../src/decider'
+import Requests, {Throws, Round} from '../src/decider'
 
 describe("history", () => {
     describe("no rounds", () => {
@@ -21,9 +21,15 @@ describe("history", () => {
                 invalidInput: () => {},
                 rounds: jest.fn()
             }
-    
+            
+            // spy, stub, mock, fake, dummy
+            let rounds = [
+                new Round(Throws.rock, "sailboat", "invalid")
+            ]
+
             const roundRepo = {
-                isEmpty: () => false
+                isEmpty: () => false,
+                getAll: () => rounds
             }
     
             let requests = new Requests()
@@ -31,7 +37,7 @@ describe("history", () => {
             requests.play(Throws.rock, "sailboat", observer, roundRepo)
             requests.getHistory(observer, roundRepo)
     
-            expect(observer.rounds).toHaveBeenCalled()
+            expect(observer.rounds).toHaveBeenCalledWith(rounds)
         })
     })
 })

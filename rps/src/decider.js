@@ -4,6 +4,14 @@ export const Throws = {
     paper: "paper"
 }
 
+export class Round {
+    constructor(p1, p2, result) {
+        this.p1 = p1
+        this.p2 = p2
+        this.result = result
+    }
+}
+
 const ThrowPattern = [Throws.rock, Throws.scissors, Throws.paper]
 export default class Requests {
     play = (p1, p2, observer) => {
@@ -14,7 +22,7 @@ export default class Requests {
         if (roundRepo.isEmpty()) {
             observer.noRounds()
         } else {
-            observer.rounds()
+            observer.rounds(roundRepo.getAll())
         }
     }
 }
