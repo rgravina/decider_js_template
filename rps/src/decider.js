@@ -9,6 +9,10 @@ export default class Requests {
     play = (p1, p2, observer) => {
         new PlayRroundRequest(observer, p1, p2).play()
     }
+
+    getHistory = (observer) => {
+        observer.noRounds()
+    }
 }
 
 class PlayRroundRequest {
